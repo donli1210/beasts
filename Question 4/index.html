@@ -1,0 +1,117 @@
+<script src="tinytest.js"></script>
+<script src="script.js"></script>
+<script>
+    tests({
+
+        'No dependency': function() {
+
+            librarySystem('dependency', [], function() {
+                return 'loaded dependency';
+            });
+
+            eq("loaded dependency", librarySystem('dependency'));
+
+        },
+
+
+        'One dependency': function() {
+
+            librarySystem('transmission', [], function() {
+                return 'loaded transmission';
+            });
+
+            librarySystem('car', ['transmission'], function(dependency) {
+                return 'car with ' + dependency;
+            });
+
+            eq("car with loaded transmission", librarySystem('car'));
+
+        },
+
+
+        'Two dependency': function() {
+
+            librarySystem('cpu', [], function() {
+                return 'CPU';
+            });
+
+            librarySystem('memory', [], function() {
+                return 'Memory';
+            });
+
+            librarySystem('Computer', ['cpu', 'memory'], function(cpu, memory) {
+                return 'Computer need ' + cpu + ' and ' + memory;
+            });
+
+            eq("Computer need CPU and Memory", librarySystem('Computer'));
+
+        },
+
+
+        'Loading the libraries out of order': function() {
+
+            librarySystem('NASDAQ', ['apple', 'tesla'], function(apple, tesla) {
+                return apple + ' and ' + tesla + ' are listed in NASDAQ';
+            });
+
+            librarySystem('apple', [], function() {
+                return 'AAPL';
+            });
+
+            librarySystem('tesla', [], function() {
+                return 'TSLA';
+            });
+
+            eq("AAPL and TSLA are listed in NASDAQ", librarySystem('NASDAQ'));
+
+
+        },
+
+
+        "Callback function for each library is run only once": function() {
+
+            var counter = 0;
+
+            librarySystem('workBlurb', ['name', 'company'], function(name, company) {
+                counter++;
+                return name + ' works at ' + company;
+            });
+
+            librarySystem('name', [], function() {
+                return 'Gordon';
+            });
+
+            librarySystem('company', [], function() {
+                return 'Watch and Code';
+            });
+
+
+            for (var i = 0; i < 100; i++) {
+                librarySystem('workBlurb'); // 'Gordon works at Watch and Code'
+            }
+
+            eq(1, counter);
+
+        },
+
+
+        "Callback function for each library is run only once for no dependency": function() {
+
+            var counter = 0;
+
+            librarySystem('hello', [], function() {
+                counter++;
+                return 'hello, world!';
+            });
+
+            for (var i = 0; i < 100; i++) {
+
+                librarySystem('hello');
+
+            }
+            eq(1, counter);
+
+        }
+
+    });
+</script>
