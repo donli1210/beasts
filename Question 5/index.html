@@ -9,20 +9,28 @@
     }
 
     if (typeof protoObj === 'undefined' || protoObj === null || typeof protoObj !== 'object') {
+
       throw new TypeError('protoObj can not be empty');
+      
     }
 
     // Loop obj all prototype hierarchy
     if (Object.getPrototypeOf(obj)) {
 
       if (protoObj === Object.getPrototypeOf(obj)) {
+
         return true;
+
       } else {
+
         return isPrototypeOf(protoObj, Object.getPrototypeOf(obj));
+
       }
 
     } else {
-      return false
+
+      return false;
+
     }
 
   }

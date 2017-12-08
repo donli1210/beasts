@@ -1,1 +1,1 @@
-My solutions of the beasts of Watch and Code https://github.com/gordonmzhu/beasts
+My solutions for the beasts questions of Watch and Code https://github.com/gordonmzhu/beasts
