@@ -1,5 +1,5 @@
 <script src="tinytest.js"></script>
-<script src="script.js"></script>
+<script src="librarySystem.js"></script>
 <script>
     tests({
 
@@ -13,6 +13,35 @@
 
         },
 
+
+        'It should allow override': function() {
+
+            librarySystem('dependency', [], function() {
+                return 'loaded dependency override.';
+            });
+
+            eq("loaded dependency override.", librarySystem('dependency'));
+
+        },
+
+        'No dependency : run 100 times': function() {
+
+            var counter = 0;
+
+            librarySystem('no dependency', [], function() {
+                counter++;
+                return 'loaded no dependency';
+            });
+
+            for(var i=0;i<100;i++){
+
+                librarySystem('no dependency');
+
+            }
+
+            eq(1, counter);
+
+        },
 
         'One dependency': function() {
 
@@ -28,8 +57,7 @@
 
         },
 
-
-        'Two dependency': function() {
+        'Two dependencies.': function() {
 
             librarySystem('cpu', [], function() {
                 return 'CPU';
