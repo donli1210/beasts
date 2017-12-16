@@ -1,71 +1,70 @@
 (function () {
   var libraryStorage = {}
 
-  // Check all items in dependencyArray.
-  // Return : true (all available)
-  //          false (Not all available)
 
-  function dependencyAvailable (dependencyArray) {
+  function getDependency(libraryName){
 
-    for (var i = 0; i < dependencyArray.length; i++) {
-      if (libraryStorage[dependencyArray[i]] === undefined) {
-        return false
-      }
+    var getDependencyObjArray = [];
+
+    libraryStorage[libraryName].runCounter = 1;
+
+    // Stop condition for the resursive call.
+    if(libraryStorage[libraryName].dependencyArray.length === 0){
+      return libraryStorage[libraryName].callback();
+    }else{
+      getDependencyObjArray = libraryStorage[libraryName].dependencyArray.map(function (dependency) {
+        return librarySystem(dependency);
+      });
     }
 
-    return true
-  }
-
-  function saveDependency(libraryName, dependencyArray, callback){
-
-      // all dependencies are available.
-        if (dependencyAvailable(dependencyArray)) {
-          var dependencyObjArray = dependencyArray.map(function (dependency) {
-            return libraryStorage[dependency]
-          })
-
-          libraryStorage[libraryName] = callback.apply(null, dependencyObjArray)
-        } else {
-          // Not all dependencies are available
-          libraryStorage[libraryName] = {
-            dependencyArray: dependencyArray,
-            callback: callback,
-            counter: 0
-          }
-        }
-  }
-
-  function getDependency(libraryName, dependencyArray, callback){
-
-    libraryStorage[libraryName].counter = 1
-
-    var getDependencyObjArray = libraryStorage[libraryName].dependencyArray.map(function (dependency) {
-      return libraryStorage[dependency]
-    })
-
-    return libraryStorage[libraryName].callback.apply(null, getDependencyObjArray)
+    return libraryStorage[libraryName].callback.apply(null, getDependencyObjArray);
 
   }
+
+  /**
+  *
+  * Library Object to store dependency array and callback function.
+  * 
+  * @param {dependencyArray} dependency array
+  * @param {callback} callback function
+  * 
+  */
+
+  function Library(dependencyArray, callback){
+
+    this.dependencyArray = dependencyArray;
+    this.callback = callback;
+    this.runCounter = 0;
+
+  }
+
+  /**
+  *
+  * librarySystem return callback function based on passed in dependency array
+  * 
+  * @param {String} library Name
+  * @param {array} dependency Array
+  * @param {function} callback
+  * @return {function} callback function 
+  */
 
   function librarySystem (libraryName, dependencyArray, callback) {
     // Save the library
-    if (arguments.length > 1) {
-      // There are dependencies
-      if (dependencyArray.length > 0) {
-        saveDependency(libraryName, dependencyArray,callback)
-      } else {
-        // No dependency
-        libraryStorage[libraryName] = callback()
-      }
-    } else {
-       // Get the library
+    if (arguments.length === 3) {
 
+      libraryStorage[libraryName] = new Library(dependencyArray, callback);
+    
+    } else if(arguments.length===1) {
+       // Get the library
        // If there are dependencies are not available when saving to libraryStorage
-      if (libraryStorage[libraryName].dependencyArray && libraryStorage[libraryName].counter === 0) {
-        return getDependency(libraryName, dependencyArray, callback);
-      } else {
-        return libraryStorage[libraryName]
+      if (libraryStorage[libraryName].dependencyArray && libraryStorage[libraryName].runCounter === 0) {
+
+        return getDependency(libraryName);
+
       }
+
+    } else{
+       throw new TypeError('Invalid arguments. librarySystem must be invoked in either store or load mode.');
     }
   }
 
