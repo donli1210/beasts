@@ -3,7 +3,7 @@
 <script>
     tests({
 
-        'No dependency': function() {
+        'It should allow empty dependency': function() {
 
             librarySystem('dependency', [], function() {
                 return 'loaded dependency';
@@ -14,7 +14,7 @@
         },
 
 
-        'It should allow override': function() {
+        'It should allow dependency name override': function() {
 
             librarySystem('dependency', [], function() {
                 return 'loaded dependency override.';
@@ -24,7 +24,7 @@
 
         },
 
-        'No dependency : run 100 times': function() {
+        'It should not allow callback function call multiple times. Case 1 : No dependency : run 100 times': function() {
 
             var counter = 0;
 
@@ -43,7 +43,7 @@
 
         },
 
-        'One dependency': function() {
+        'It should allow one dependency': function() {
 
             librarySystem('transmission', [], function() {
                 return 'loaded transmission';
@@ -57,7 +57,7 @@
 
         },
 
-        'Two dependencies.': function() {
+        'It should allow two dependencies.': function() {
 
             librarySystem('cpu', [], function() {
                 return 'CPU';
@@ -76,7 +76,7 @@
         },
 
 
-        'Loading the libraries out of order': function() {
+        'It should allow loading the libraries out of order': function() {
 
             librarySystem('NASDAQ', ['apple', 'tesla'], function(apple, tesla) {
                 return apple + ' and ' + tesla + ' are listed in NASDAQ';
@@ -96,7 +96,7 @@
         },
 
 
-        "Callback function for each library is run only once": function() {
+        "It should not allow callback function call multiple times. Case 2 : with dependency": function() {
 
             var counter = 0;
 
@@ -118,25 +118,6 @@
                 librarySystem('workBlurb'); // 'Gordon works at Watch and Code'
             }
 
-            eq(1, counter);
-
-        },
-
-
-        "Callback function for each library is run only once for no dependency": function() {
-
-            var counter = 0;
-
-            librarySystem('hello', [], function() {
-                counter++;
-                return 'hello, world!';
-            });
-
-            for (var i = 0; i < 100; i++) {
-
-                librarySystem('hello');
-
-            }
             eq(1, counter);
 
         }

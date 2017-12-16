@@ -1,6 +1,11 @@
 (function () {
   var libraryStorage = {}
 
+  /**
+  * Get Library callback
+  * 
+  * @param {String} library name 
+  */
 
   function getDependency(libraryName){
 
@@ -25,8 +30,8 @@
   *
   * Library Object to store dependency array and callback function.
   * 
-  * @param {dependencyArray} dependency array
-  * @param {callback} callback function
+  * @param {array} dependency array
+  * @param {function} callback function
   * 
   */
 
