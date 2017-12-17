@@ -1,81 +1,36 @@
 <script src="tinytest.js"></script>
+<script src="isPrototypeOf.js"></script>
 <script>
-  function isPrototypeOf(protoObj, obj) {
-
-    if (typeof obj === 'undefined' || obj === null || typeof obj !== 'object') {
-
-      throw new TypeError('obj can not be empty.');
-
-    }
-
-    if (typeof protoObj === 'undefined' || protoObj === null || typeof protoObj !== 'object') {
-
-      throw new TypeError('protoObj can not be empty');
-      
-    }
-
-    // Loop obj all prototype hierarchy
-    if (Object.getPrototypeOf(obj)) {
-
-      if (protoObj === Object.getPrototypeOf(obj)) {
-
-        return true;
-
-      } else {
-
-        return isPrototypeOf(protoObj, Object.getPrototypeOf(obj));
-
-      }
-
-    } else {
-
-      return false;
-
-    }
-
-  }
-
   tests({
-
-    'Check prototpye of : Equal': function() {
+    'It should return true if first parameter is the protorype of the second parameter.': function() {
       var canine = {
         bark: function() {
           console.log('bark');
         }
       };
-
       var dog = Object.create(canine);
       dog.fetch = function() {
         console.log('fetch');
       };
-
       var myDog = Object.create(dog);
-      //debugger;
       eq(true, isPrototypeOf(dog, myDog));
-
     },
-
-    'Check prototpye of : Not equal': function() {
+    'It should return false the second parameter\'s prototype is null.': function() {
       var canine = {
         bark: function() {
           console.log('bark');
         }
       };
-
       var dog = Object.create(canine);
       dog.fetch = function() {
         console.log('fetch');
       };
-
       var myDog = Object.create(dog);
       var empty = Object.create(null);
-      // console.log("here");
-      // console.log(empty);
       eq(false, isPrototypeOf(dog, empty));
 
     },
-
-    'Check prototpye of : Hierarchy': function() {
+    'It should return true if the first parameter is the prototype of native Object.': function() {
       var canine = {
         bark: function() {
           console.log('bark');
@@ -88,14 +43,11 @@
       };
 
       var myDog = Object.create(dog);
-      var empty = Object.create(null);
 
       eq(true, isPrototypeOf(Object.prototype, myDog));
 
     },
-
-
-    'Check prototpye of : Any number layers of hierarchy': function() {
+    'It should return true for any number of prototype links.': function() {
       var canine = {
         bark: function() {
           console.log('bark');
@@ -109,21 +61,15 @@
 
       var myDog = Object.create(dog);
       var empty = Object.create(null);
-
       eq(true, isPrototypeOf(canine, myDog));
 
     },
-
-    'Object can not be empty': function() {
-
+    'It should throw TypeError if the parameter is empty, null or undefined.': function() {
       try {
         isPrototypeOf(undefined, null);
       } catch (e) {
-        console.log(e);
         eq(e instanceof TypeError, true);
       }
-
     }
-
   });
 </script>
