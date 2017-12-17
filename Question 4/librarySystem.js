@@ -5,6 +5,7 @@
   * Get Library callback
   * 
   * @param {String} library name 
+  * @return {object} callback return object
   */
 
   function getDependency(libraryName){
